@@ -1,0 +1,101 @@
+<title>Sample Project</title>
+<h3>Welcome to...</h3>
+<pre >
+   ____                       ____                     _   _
+  / ___| _ __   __ _  ___ ___/ ___|_      ____ _ _ __ | | | |
+  \___ \| '_ \ / _` |/ __/ _ \___ \ \ /\ / / _` | '_ \| | | |
+   ___) | |_) | (_| | (_|  __/___) \ V  V / (_| | |_) |_| |_|
+  |____/| .__/ \__,_|\___\___|____/ \_/\_/ \__,_| .__/(_) (_)
+        |_|                                     |_|
+ </pre>
+<div style="text-align: center;">
+  The digital currency that aims to revolutionize the <br><strong style="color:darkcyan">Asteroid Mining Industry</strong>
+</div>
+<br>
+<link rel="stylesheet" type="text/css" href="./index.css">
+
+<section>
+  <h2>ICO</h2>
+
+  <div>
+    SPC left to buy: <span id="ico_spc_left"></span>
+  </div>
+
+   <form id="ico_spc_buy">
+    Buy SPC
+    <input name="eth" value="0.1" autocomplete="off">
+    <button type="submit">Buy</button>
+  </form>
+
+  <div>
+    SPC to collect: <span id="ico_spc_collect_amount">0</span>
+  </div>
+  <form id="ico_spc_redeem">
+    <button type="submit">Collect tokens</button>
+  </form>
+  
+</section>
+
+<section>
+  <div>
+    Your address: <br>
+    <span  id="signer_address">0</span>
+  </div>
+
+  <div>
+    SPC Balance: <br>
+    <span  id="signer_current_spc_count">0</span> SPC 
+  </div>
+
+  <div>
+    LP Balance: <br>
+    <span  id="signer_current_lp_count">0</span> LP 
+  </div>
+
+</section>
+
+<section>
+  <h2>Pool</h2>
+
+  <div>
+    Reserve ETH: <br>
+    <span  id="pool_current_eth_count">0</span> ETH
+  </div>
+
+  <div>
+    Reserve SPC: <br>
+    <span  id="pool_current_spc_count">0</span> SPC 
+  </div>
+
+  <form id="lp_deposit">
+    Deposit for LP tokens <br>
+    <input name="eth" value="0" autocomplete="off"> ETH<br>
+    <input name="spc" value="0" autocomplete="off"> SPC<br>
+    <button type="submit">Deposit</button>
+  </form>
+
+  <form id="lp_withdraw">
+    Withdraw from pool <br>
+    <button type="submit">Withdraw All</button>
+  </form>
+</section>
+
+<section>
+  <h2>Trade</h2>
+
+  <form id="swap">
+    <span id="swap_title">Trade ETH for SPC</span> <br>
+    <input name="amount_in" value="0" autocomplete="off"> <span id="swap_in_label">ETH</span>
+    <small id="switcher" style="text-decoration: underline; cursor: pointer;">swap</small>
+    <br>
+    <br>
+    <input name="min_amount" value="0" autocomplete="off">
+    <span id="outmin_label">Minimum Amount Output (<span id="outmin_in_label">SPC</span>)</span>
+    <br>
+    <br>
+    <span id="swap_out_label">0 SPC</span><br>
+    <button type="submit">Trade</button>
+  </form>
+</section>
+
+<script type="module" src="./index.js"></script>

@@ -1,0 +1,14 @@
+.DS_Store
+node_modules
+.env
+.hh-accounts
+coverage
+coverage.json
+typechain
+typechain-types
+frontend/.parcel-cache
+frontend/dist
+
+#Hardhat files
+cache
+artifacts
