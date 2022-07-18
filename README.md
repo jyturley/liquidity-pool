@@ -1,12 +1,24 @@
 # SpaceCoin Liquidity Pool
 
-## Spec
+A [Uniswap](https://uniswap.org/) inspired constant-product formula liquidity pool that handles direct ETH and [SpaceCoin](https://github.com/jyturley/space-coin) swaps, slippage protection, and deposit/withdrawing of liquidity through minting of its own ERC20 lp tokens. [Audited](./staff-audit-lp.md) with zero vulnerabilities by `0xMacro` staff.
 
-Project specification has been copied to this repo over at [spec.md](spec.md).
+Contracts have been deployed and verified on the Goerli Testnet:
 
-## Project Notes
+- [SpacePool](https://goerli.etherscan.io/address/0xbF30d10B5C1Bb880f59804Ef2DF48b8d0E9104Cd#code)
+- [SpaceRouter](https://goerli.etherscan.io/address/0xDd1D7E0d2602FF4feEAF052C67f21631D402BcfB#code)
+- [SpaceCoin](https://goerli.etherscan.io/address/0x9D3e43204703a0598C2bc80d77072d083c5e7BC6#code)
+- [SpaceCoin ICO](https://goerli.etherscan.io/address/0xa51131B9BF3ece64155B086118308F995ca37164#code)
 
-My project contains five solidity files.
+```
+SpaceCoinICO deployed to: 0xa51131B9BF3ece64155B086118308F995ca37164
+SpaceCoin deployed to: 0x9D3e43204703a0598C2bc80d77072d083c5e7BC6
+SpacePool deployed to: 0xbF30d10B5C1Bb880f59804Ef2DF48b8d0E9104Cd
+SpaceRouter deployed to: 0xDd1D7E0d2602FF4feEAF052C67f21631D402BcfB
+```
+
+## Notes
+
+This repo contains five solidity files.
 
 1. `SpaceCoin.sol` which defines the ERC20 token that will be traded along with ETH in the liquidity pool. Symbol is `SPC`.
 1. `SpaceCoinICO.sol`which defines the logic for the ICO of space coin, implemented as part of a OxMacro project a few weeks back.
@@ -39,22 +51,7 @@ My project contains five solidity files.
 - I opted to define the common functions used several times throughout different contracts in this single library for clarity and modularity. Most are variants of `transfer()`s with addtional safety checks.
 - I do not claim credit for the `sqrt()` which was copied over from Uniswap V2 Core's `Math.sol`.
 
-# Other Deliverables
-
-- Contracts have been deployed and verified on the Goerli Testnet:
-  1. [SpacePool](https://goerli.etherscan.io/address/0xbF30d10B5C1Bb880f59804Ef2DF48b8d0E9104Cd#code)
-  1. [SpaceRouter](https://goerli.etherscan.io/address/0xDd1D7E0d2602FF4feEAF052C67f21631D402BcfB#code)
-  1. [SpaceCoin](https://goerli.etherscan.io/address/0x9D3e43204703a0598C2bc80d77072d083c5e7BC6#code)
-  1. [SpaceCoin ICO](https://goerli.etherscan.io/address/0xa51131B9BF3ece64155B086118308F995ca37164#code)
-
-```
-SpaceCoinICO deployed to: 0xa51131B9BF3ece64155B086118308F995ca37164
-SpaceCoin deployed to: 0x9D3e43204703a0598C2bc80d77072d083c5e7BC6
-SpacePool deployed to: 0xbF30d10B5C1Bb880f59804Ef2DF48b8d0E9104Cd
-SpaceRouter deployed to: 0xDd1D7E0d2602FF4feEAF052C67f21631D402BcfB
-```
-
-## Front End
+### Front End
 
 - The frontend has some light modifications to the provided template. But overall, it has the ability to do all what is specified in the spec:
   1. Add and remove liquidity to the SpaceCoin ETH liquidity pool.
@@ -109,17 +106,3 @@ const routerAddr = "0xDd1D7E0d2602FF4feEAF052C67f21631D402BcfB";
 ```
 
 The commented addresses are the addresses that are generated on my system using the hardhat localhost network.
-
-## Design Exercise
-
-```
-How would you extend your LP contract to award additional rewards – say, a separate ERC-20 token – to further incentivize liquidity providers to deposit into your pool?
-```
-
-To incentivize more LPs with a new ERC20 token, we should adjust the `swap()` function, and not the withdraw or deposit functions. If we provide this new ERC20 token upon LP depositing funds, this can incentivize the same LP to withdraw, and then put back in the same funds to receive an additional ERC20 token reward.
-
-One possible solution is to adjust the swap mechanism to introduce a lottery. At every swap, one out of the list of all LPs is chosen to receive this new ERC20 reward. The reward amount should be proportional to the swap size (to prevent LPs from spamming swaps themselves), and a minimum initial deposit (defined by the K value of x \* y) for an LP to qualify for the lottery list.
-
-This is a simple solution that requires 1. a new contract that implements the ERC20 spec and 2. a `mapping(address=>bool) lotteryMembers` to keep track of who is on the lottery list and `address[] lotteryList` to allow for an easy way to random access a lottery member.
-
-Given all this, I do not think creating a completely new ERC20 token as the sole means to incentivize LPs would be a good idea. There is beauty in the simplicity of projects, and unless this new ERC20 token has a separate usecase that drives demand, I worry it will provide any value at all. I think the best way to incentivize LPs is to simply increase the liquidity pool's swap fees.
