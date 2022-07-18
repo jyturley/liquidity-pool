@@ -1,6 +1,6 @@
 # SpaceCoin Liquidity Pool
 
-A [Uniswap](https://uniswap.org/) inspired constant-product formula liquidity pool that handles direct ETH and [SpaceCoin](https://github.com/jyturley/space-coin) swaps, slippage protection, and deposit/withdrawing of liquidity through minting of its own ERC20 lp tokens. [Audited](./staff-audit-lp.md) with zero vulnerabilities by `0xMacro` staff.
+A Uniswap inspired constant-product formula liquidity pool that handles direct ETH and [SpaceCoin](https://github.com/jyturley/space-coin) swaps, slippage protection, and deposit/withdrawing of liquidity through minting of its own ERC20 lp tokens. [Audited](./staff-audit-lp.md) with zero vulnerabilities by `0xMacro` staff.
 
 Contracts have been deployed and verified on the Goerli Testnet:
 
@@ -28,19 +28,15 @@ This repo contains five solidity files.
 
 ### Intentional Design Choices and Tradeoffs
 
-#### SpaceCoin
-
-- This is copied over from my previous ICO project, but with one small change: I fixed a previous mistake where I overrode the incorrect OZ ERC20 transfer function. This renders the `transferFrom()` function untaxed. While the spec does not suggest to fix previous vulnerabilities, I opted to fix this so that testing swap output values with tax do not lead to any confusing output.
-
 #### SpaceCoinICO
 
-- While the spec says to add a withdraw function to the ICO, I did not need to make any additional changes to my contract. My ICO is set up so that all of the raised ETH will automatically collect to the treasury address. So when the SpaceCoin organization decides to begin the liquidity pool, it can simply use the treasury EOA to manually add liquidity using `SpaceRouter.addLiquidity()`. I double checked that this is okay with staff at office hours.
+- The ICO is set up so that all of the raised ETH will automatically collect to the treasury address. So when the SpaceCoin organization decides to begin the liquidity pool, it can simply use the treasury EOA to manually add liquidity using `SpaceRouter.addLiquidity()`. I double checked that this is okay with staff at office hours.
 
 #### SpacePool
 
-- I undersand that the Price Oracle is not part of this LP project spec, however I still implemented an event `Sync` that is emitted on every `_updateReserves()` function. I think it is important aspect of the contract since an update on the internal x and y values affects the behavior of every other function in the pool.
 - Unlike UniswapV2's `swap()` function, `SpacePool.sol`'s swap function will not allow for bidirectional swaps. SpacePool has additional checks so that it can only trade ETH->SPC or separately from SPC->ETH in a single transaction. This decision comes at some efficiency tradeoffs, but I think it is much easier to understand.
 - On initial deposit, uniswap will mint 1000 tokens (defined by `MIN_LIQUDITY`) to `address(0)`. SpaceCoin does the same thing but to a different inaccessible wallet defined as `BURN_ADDRESS`.
+- I implemented event `Sync` that is emitted on every `_updateReserves()` function. I think it is important aspect of the contract since an update on the internal x and y values affects the behavior of every other function in the pool.
 
 #### SpaceRouter
 
@@ -53,7 +49,7 @@ This repo contains five solidity files.
 
 ### Front End
 
-- The frontend has some light modifications to the provided template. But overall, it has the ability to do all what is specified in the spec:
+- The front end has the ability to do all what is specified in the spec:
   1. Add and remove liquidity to the SpaceCoin ETH liquidity pool.
   1. Allow users to trade ETH for SPC and vice versa
   1. Configure the slippage through asking the user to specify the minimum amount of token they would like to receive after the swap. (This calculation is the final amount. After fees, after tax).
